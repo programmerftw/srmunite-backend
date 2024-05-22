@@ -25,6 +25,11 @@ const newsSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId, // Auto-generated unique ID
     news: String,
     tags: String,
+    description: String,
+    date: {
+        type: Date,
+        default: Date.now // Set default value to current date and time
+    }
     // other fields...
 });
 
@@ -53,6 +58,7 @@ app.post('/api/news', (req, res) => {
         _id: new mongoose.Types.ObjectId(),
         news: req.body.news,
         tags: req.body.tags,
+        description: req.body.description,
         // You can add more fields here if needed
     });
 
@@ -65,6 +71,19 @@ app.post('/api/news', (req, res) => {
             console.error('Error creating news:', err);
             res.status(500).json({ error: 'Internal Server Error' });
         });
+});
+
+app.get('/api/news/:id', async (req, res) => {
+    const newsId = req.params.id;
+
+    NewsModel.findById(newsId)
+    .then(news => {
+        res.json(news);
+    })
+    .catch(err => {
+        console.error('Error fetching samples:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
 });
 
 // Define a route for deleting an existing news article
@@ -90,6 +109,7 @@ app.put('/api/news/:id', (req, res) => {
     NewsModel.findByIdAndUpdate(newsId, { 
         news: req.body.news,
         tags: req.body.tags,
+        description: req.body.description,
         // Update other fields as needed
     })
     .then(() => {
@@ -101,9 +121,109 @@ app.put('/api/news/:id', (req, res) => {
     });
 });
 
+// Define a sample schema and model (optional)
+const LostandFoundSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId, // Auto-generated unique ID
+    location: String,
+    item: String,
+    contact: Number,
+    date: {
+        type: Date,
+        default: Date.now // Set default value to current date and time
+    }
+    // other fields...
+});
+
+const LostandFoundModel = mongoose.model('LostandFound', LostandFoundSchema);
+
+
+// Example route to fetch data from MongoDB
+app.get('/api/lostandfound', (req, res) => {
+    LostandFoundModel.find()
+        .then(LostandFound => {
+            res.json(LostandFound);
+        })
+        .catch(err => {
+            console.error('Error fetching samples:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        });
+});
+// Define a route for creating a new news article
+app.post('/api/lostandfound', (req, res) => {
+    // Create a new News instance using the request body
+    const newLostandFound = new LostandFoundModel({
+        _id: new mongoose.Types.ObjectId(),
+        location: req.body.location,
+        item: req.body.item,
+        contact: req.body.contact,
+        // You can add more fields here if needed
+    });
+
+    // Save the new news article to the database
+    newLostandFound.save()
+        .then(() => {
+            res.status(201).json({ message: 'Lost and Found created successfully' });
+        })
+        .catch(err => {
+            console.error('Error creating Lost and Found:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        });
+});
+
+app.get('/api/lostandfound/:id', async (req, res) => {
+    const LostandFoundId = req.params.id;
+
+    LostandFoundModel.findById(LostandFoundIdId)
+    .then(LostandFound => {
+        res.json(LostandFound);
+    })
+    .catch(err => {
+        console.error('Error fetching samples:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+// Define a route for deleting an existing news article
+app.delete('/api/lostandfound/:id', (req, res) => {
+    const LostandFoundId = req.params.id;
+    
+    // Find the news article by its ID and delete it
+    LostandFoundModel.findByIdAndDelete(LostandFoundId)
+    .then(() => {
+        res.json({ message: 'Lost and Found deleted successfully' });
+    })
+    .catch(err => {
+        console.error('Error deleting Lost and Found:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+// Define a route for updating an existing Lost and Found article
+app.put('/api/lostandfound/:id', (req, res) => {
+    const LostandFoundId = req.params.id;
+    
+    // Find the news article by its ID and update its fields
+    LostandFoundModel.findByIdAndUpdate(LostandFoundId, { 
+        location: req.body.location,
+        item: req.body.item,
+        contact: req.body.contact,
+        // Update other fields as needed
+    })
+    .then(() => {
+        res.json({ message: 'lost and found updated successfully' });
+    })
+    .catch(err => {
+        console.error('Error updating lost and found:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+
+
 
 
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
