@@ -29,7 +29,8 @@ const newsSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now // Set default value to current date and time
-    }
+    },
+    image: String
     // other fields...
 });
 
@@ -59,6 +60,7 @@ app.post('/api/news', (req, res) => {
         news: req.body.news,
         tags: req.body.tags,
         description: req.body.description,
+        image: req.body.image
         // You can add more fields here if needed
     });
 
@@ -110,6 +112,7 @@ app.put('/api/news/:id', (req, res) => {
         news: req.body.news,
         tags: req.body.tags,
         description: req.body.description,
+        image: req.body.image
         // Update other fields as needed
     })
     .then(() => {
@@ -130,7 +133,8 @@ const LostandFoundSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now // Set default value to current date and time
-    }
+    },
+    image: String
     // other fields...
 });
 
@@ -156,6 +160,7 @@ app.post('/api/lostandfound', (req, res) => {
         location: req.body.location,
         item: req.body.item,
         contact: req.body.contact,
+        image: req.body.image,
         // You can add more fields here if needed
     });
 
@@ -207,6 +212,7 @@ app.put('/api/lostandfound/:id', (req, res) => {
         location: req.body.location,
         item: req.body.item,
         contact: req.body.contact,
+        image: req.body.image
         // Update other fields as needed
     })
     .then(() => {
